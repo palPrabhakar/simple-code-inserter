@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/pal/workspace/simple-code-inserter/build",
+  "command": "/usr/bin/clang++   -Wall -g3 -O0 -fno-rtti -I/usr/include -I/usr/lib/gcc/gcc/x86_64-redhat-linux/14/include -std=c++17   -fno-exceptions -funwind-tables -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/clang-tool.dir/src/main.cpp.o -c /home/pal/workspace/simple-code-inserter/src/main.cpp",
+  "file": "/home/pal/workspace/simple-code-inserter/src/main.cpp",
+  "output": "CMakeFiles/clang-tool.dir/src/main.cpp.o"
+}
+]
