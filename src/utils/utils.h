@@ -1,7 +1,5 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#pragma once
 
-#include <fstream>
 #include <string>
 #include <vector>
 
@@ -25,5 +23,3 @@ namespace utils
 
     std::string getClangBuiltInIncludePath(const std::string &fullCallPath);
 } // namespace utils
-
-#endif

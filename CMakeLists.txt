@@ -25,6 +25,6 @@ set(CMAKE_CXX_FLAGS "-Wall -g3 -O0 -fno-rtti ${LLVM_COMPILE_FLAGS}")
 
 include_directories(SYSTEM ${LLVM_INCLUDE_DIRS} ${CLANG_INCLUDE_DIRS})
 
-add_executable(clang-tool src/main.cpp src/utils/utils.cpp)
+add_executable(clang-tool src/main.cpp src/utils/utils.cpp src/matchers/matchers.cpp)
 
 target_link_libraries(clang-tool PRIVATE clang-cpp ${LLVM_LIBS_CORE})
