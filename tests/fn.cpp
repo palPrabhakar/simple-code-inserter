@@ -12,9 +12,14 @@ void foo(int a, int b) { int x = a + b; }
 
 int bar(int x) { return x * 2; }
 
-int bad(int y) { return y+4; }
+int lol(int y) { return y + 4; }
 
 int main() {
   auto b = bar(2);
+  
+  for(int i = 0; i < 2; ++i) {
+    i = i +2;
+  }
+
   return 0;
 }

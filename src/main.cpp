@@ -14,6 +14,7 @@
 #include "clang/Tooling/Transformer/Transformer.h"
 
 #include <clang/AST/DeclBase.h>
+#include <clang/ASTMatchers/ASTMatchers.h>
 
 using namespace clang;
 using namespace clang::tooling;
@@ -44,8 +45,19 @@ int main(int argc, const char **argv) {
     compileArgs.push_back("-I" + utils::getClangBuiltInIncludePath(argv[0]));
 
     // auto matcher = matchers::get_decl_matchers(sourceFile);
-    auto matcher = functionDecl(isDefinition()).bind("fn");
-    auto action = changeTo(name("fn"), cat(name("fn"), "_renamed"));
+    // functionDecl(isDefinition(), unless(isInStdNamespace()),
+    // isExpansionInFileMatching(fname))
+    // .bind("fn");
+    auto matcher =
+        compoundStmt(
+            hasParent(functionDecl(isDefinition(), unless(isInStdNamespace()),
+                                   isExpansionInFileMatching(sourceFile))
+                          .bind("fname")))
+            .bind("fn");
+    // auto matcher = functionDecl(isDefinition()).bind("fn");
+    auto action = insertBefore(
+        statements("fn"), cat("std::cout<<\"", name("fname"), "\"<<std::endl;"));
+    auto ih = addInclude("iostream", IncludeFormat::Angled);
     // auto rewrite_rule = makeRule(matcher, action);
     AtomicChanges Changes;
     auto Consumer = [&](Expected<MutableArrayRef<AtomicChange>> C) {
@@ -62,7 +74,7 @@ int main(int argc, const char **argv) {
     // Transformer transformer(makeRule(functionDecl(hasName("bad")).bind("f"),
     //                                  changeTo(name("f"), cat("good"))),
     //                         std::move(Consumer));
-    Transformer transformer(makeRule(matcher, action), std::move(Consumer));
+    Transformer transformer(makeRule(matcher, {action, ih}), std::move(Consumer));
     MatchFinder finder;
     transformer.registerMatchers(&finder);
 
