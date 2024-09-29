@@ -5,7 +5,7 @@ set(CMAKE_CXX_COMPILER "clang++")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(clang-tool)
+project(insert-print-stmts)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin/)
 
@@ -25,6 +25,6 @@ set(CMAKE_CXX_FLAGS "-Wall -g3 -O0 -fno-rtti ${LLVM_COMPILE_FLAGS}")
 
 include_directories(SYSTEM ${LLVM_INCLUDE_DIRS} ${CLANG_INCLUDE_DIRS})
 
-add_executable(clang-tool src/main.cpp src/utils/utils.cpp src/matchers/matchers.cpp)
+add_executable(insert-print-stmts src/main.cpp src/utils/utils.cpp src/tool/code_inserter_tool.cpp)
 
-target_link_libraries(clang-tool PRIVATE clang-cpp ${LLVM_LIBS_CORE})
+target_link_libraries(insert-print-stmts PRIVATE clang-cpp ${LLVM_LIBS_CORE})
