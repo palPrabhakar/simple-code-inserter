@@ -34,7 +34,6 @@ public:
 
 private:
   std::string m_source;
-  std::string m_code;
   AtomicChanges m_changes;
   std::vector<std::string> m_compile_args;
 

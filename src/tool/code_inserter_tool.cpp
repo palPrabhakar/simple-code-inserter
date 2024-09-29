@@ -14,8 +14,15 @@ using ::clang::tooling::newFrontendActionFactory;
 using ::clang::tooling::Transformer;
 
 bool CodeInserterTool::applySourceChanges() {
+
+  llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> buffer_err =
+      llvm::MemoryBuffer::getFile(m_source);
+  if (!buffer_err) {
+    llvm::errs() << "error: failed to open " << m_source << " for rewriting\n";
+    return true;
+  }
   auto result =
-      applyAtomicChanges(m_source, m_code, m_changes, ApplyChangesSpec());
+      applyAtomicChanges(m_source, (*buffer_err)->getBuffer(), m_changes, ApplyChangesSpec());
 
   if (!result) {
     llvm::errs() << toString(result.takeError());
@@ -28,6 +35,7 @@ bool CodeInserterTool::applySourceChanges() {
     llvm::errs() << ec.message() << "\n";
     return false;
   }
+
   os << *result;
 
   return true;
@@ -40,7 +48,6 @@ bool CodeInserterTool::init(const char *program_name,
     return false;
   }
 
-  m_code = utils::getSourceCode(m_source);
   auto compileCommands = optionsParser.getCompilations().getCompileCommands(
       getAbsolutePath(m_source));
 
@@ -56,8 +63,7 @@ bool CodeInserterTool::run() {
   transformer.registerMatchers(&finder);
 
   utils::customRunToolOnCodeWithArgs(
-      newFrontendActionFactory(&finder)->create(), m_code, m_compile_args,
-      m_source);
+      newFrontendActionFactory(&finder)->create(), m_compile_args, m_source);
 
   return true;
 }

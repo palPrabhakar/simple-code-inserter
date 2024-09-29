@@ -8,7 +8,7 @@ getSyntaxOnlyToolArgs(const std::vector<std::string> &extraArgs,
                       llvm::StringRef fileName) {
   std::vector<std::string> args;
 
-  args.push_back("clang-tool");
+  args.push_back("insert-print-stmts");
   args.push_back("-fsyntax-only");
 
   args.insert(args.end(), extraArgs.begin(), extraArgs.end());
@@ -19,18 +19,16 @@ getSyntaxOnlyToolArgs(const std::vector<std::string> &extraArgs,
 
 bool customRunToolOnCodeWithArgs(
     std::unique_ptr<clang::FrontendAction> frontendAction,
-    const llvm::Twine &code, const std::vector<std::string> &args,
-    const llvm::Twine &fileName) {
+    const std::vector<std::string> &args, const llvm::Twine &fileName) {
   llvm::SmallString<16> fileNameStorage;
   llvm::StringRef fileNameRef =
       fileName.toNullTerminatedStringRef(fileNameStorage);
 
   llvm::IntrusiveRefCntPtr<clang::FileManager> files(
       new clang::FileManager(clang::FileSystemOptions()));
-  auto pchContainer = std::make_shared<clang::PCHContainerOperations>();
   clang::tooling::ToolInvocation invocation(
       getSyntaxOnlyToolArgs(args, fileNameRef), std::move(frontendAction),
-      files.get(), pchContainer);
+      files.get());
 
   return invocation.run();
 }
@@ -52,18 +50,6 @@ std::vector<std::string> getCompileArgs(
   }
 
   return compileArgs;
-}
-
-std::string getSourceCode(const std::string &sourceFile) {
-  std::string sourcetxt = "";
-  std::string temp = "";
-
-  std::ifstream file(sourceFile);
-
-  while (std::getline(file, temp))
-    sourcetxt += temp + "\n";
-
-  return sourcetxt;
 }
 
 std::string getClangBuiltInIncludePath(const std::string &fullCallPath) {
