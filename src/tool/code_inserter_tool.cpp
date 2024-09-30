@@ -1,5 +1,4 @@
 #include "code_inserter_tool.h"
-#include "../utils/utils.h"
 #include <clang/ASTMatchers/ASTMatchFinder.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Tooling/Refactoring/AtomicChange.h>
@@ -9,63 +8,54 @@
 namespace sci {
 using ::clang::ast_matchers::MatchFinder;
 using ::clang::tooling::ApplyChangesSpec;
-using ::clang::tooling::getAbsolutePath;
 using ::clang::tooling::newFrontendActionFactory;
 using ::clang::tooling::Transformer;
 
 bool CodeInserterTool::applySourceChanges() {
+  std::unordered_map<std::string, AtomicChanges> source_changes;
 
-  llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> buffer_err =
-      llvm::MemoryBuffer::getFile(m_source);
-  if (!buffer_err) {
-    llvm::errs() << "error: failed to open " << m_source << " for rewriting\n";
-    return true;
-  }
-  auto result =
-      applyAtomicChanges(m_source, (*buffer_err)->getBuffer(), m_changes, ApplyChangesSpec());
-
-  if (!result) {
-    llvm::errs() << toString(result.takeError());
-    return false;
+  for(auto &change: m_changes) {
+    source_changes[change.getFilePath()].push_back(std::move(change));
   }
 
-  std::error_code ec;
-  llvm::raw_fd_ostream os(m_source, ec, llvm::sys::fs::OF_TextWithCRLF);
-  if (ec) {
-    llvm::errs() << ec.message() << "\n";
-    return false;
-  }
+  for (auto &[source, changes] : source_changes) {
+    llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> buffer_err =
+        llvm::MemoryBuffer::getFile(source);
+    if (!buffer_err) {
+      llvm::errs() << "error: failed to open " << source
+                   << " for rewriting\n";
+      return true;
+    }
+    auto result = applyAtomicChanges(source, (*buffer_err)->getBuffer(),
+                                     changes, ApplyChangesSpec());
 
-  os << *result;
+    if (!result) {
+      llvm::errs() << toString(result.takeError());
+      return false;
+    }
+
+    std::error_code ec;
+    llvm::raw_fd_ostream os(source, ec, llvm::sys::fs::OF_TextWithCRLF);
+    if (ec) {
+      llvm::errs() << ec.message() << "\n";
+      return false;
+    }
+
+    os << *result;
+  }
 
   return true;
 }
 
-bool CodeInserterTool::init(const char *program_name,
-                            CommonOptionsParser &optionsParser) {
-  if (utils::fileExists(m_source) == false) {
-    llvm::errs() << "File: " << m_source << " does not exist!\n";
-    return false;
-  }
-
-  auto compileCommands = optionsParser.getCompilations().getCompileCommands(
-      getAbsolutePath(m_source));
-
-  m_compile_args = utils::getCompileArgs(compileCommands);
-  m_compile_args.push_back("-I" +
-                           utils::getClangBuiltInIncludePath(program_name));
-  return true;
-}
-
-bool CodeInserterTool::run() {
+bool CodeInserterTool::run(CommonOptionsParser &options_parser) {
   Transformer transformer(getRule(), getConsumer());
   MatchFinder finder;
   transformer.registerMatchers(&finder);
 
-  utils::customRunToolOnCodeWithArgs(
-      newFrontendActionFactory(&finder)->create(), m_compile_args, m_source);
+  clang::tooling::ClangTool tool(options_parser.getCompilations(),
+                                 options_parser.getSourcePathList());
 
-  return true;
+  return tool.run(newFrontendActionFactory(&finder).get());
 }
 
 } // namespace sci

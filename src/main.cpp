@@ -1,8 +1,12 @@
+#include "tool/code_inserter_tool.h"
 #include "clang/Tooling/CommonOptionsParser.h"
 #include "llvm/Support/CommandLine.h"
-#include "tool/code_inserter_tool.h"
 
-llvm::cl::OptionCategory ctCategory("code-inserter-tool options");
+static llvm::cl::OptionCategory ctCategory("print-insert-tool options");
+
+static llvm::cl::opt<bool> endOption(
+    "end", llvm::cl::desc("Insert print statement at the end of the function."),
+    llvm::cl::cat(ctCategory));
 
 using ::clang::tooling::CommonOptionsParser;
 
@@ -14,16 +18,10 @@ int main(int argc, const char **argv) {
   }
 
   CommonOptionsParser &optionsParser = expectedParser.get();
-  for (auto &source : optionsParser.getSourcePathList()) {
-    sci::CodeInserterTool tool(source);
-    if(!tool.init(argv[0], optionsParser)) 
-      continue;
+  sci::CodeInserterTool tool;
 
-    if(!tool.run())
-      continue;
-
+  if (!tool.run(optionsParser))
     tool.applySourceChanges();
-  }
 
   return 0;
 }

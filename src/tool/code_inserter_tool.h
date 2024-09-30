@@ -13,7 +13,7 @@ using ::clang::ast_matchers::compoundStmt;
 using ::clang::ast_matchers::functionDecl;
 using ::clang::ast_matchers::hasParent;
 using ::clang::ast_matchers::isDefinition;
-using ::clang::ast_matchers::isExpansionInFileMatching;
+using ::clang::ast_matchers::isExpansionInMainFile;
 using ::clang::ast_matchers::isInStdNamespace;
 using ::clang::ast_matchers::unless;
 using ::clang::tooling::AtomicChange;
@@ -27,15 +27,11 @@ using ::clang::transformer::statements;
 
 class CodeInserterTool {
 public:
-  CodeInserterTool(std::string source) : m_source(source) {}
-  bool run();
+  bool run(CommonOptionsParser &);
   bool applySourceChanges();
-  bool init(const char *, CommonOptionsParser &);
 
 private:
-  std::string m_source;
   AtomicChanges m_changes;
-  std::vector<std::string> m_compile_args;
 
   auto getRule() {
     auto actions = {
@@ -46,7 +42,7 @@ private:
     auto matcher =
         compoundStmt(
             hasParent(functionDecl(isDefinition(), unless(isInStdNamespace()),
-                                   isExpansionInFileMatching(m_source))
+                                   isExpansionInMainFile())
                           .bind("fname")))
             .bind("fn");
     return makeRule(std::move(matcher), std::move(actions));

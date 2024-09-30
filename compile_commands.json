@@ -1,19 +1,19 @@
 [
 {
   "directory": "/home/pal/workspace/simple-code-inserter/build",
-  "command": "/usr/bin/clang++   -Wall -g3 -O0 -fno-rtti -I/usr/include -std=c++17   -fno-exceptions -funwind-tables -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/insert-print-stmts.dir/src/main.cpp.o -c /home/pal/workspace/simple-code-inserter/src/main.cpp",
+  "command": "/usr/bin/c++  -isystem /home/pal/opt/llvm/include -Wall -g3 -O0 -fno-rtti    -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/insert-print-stmts.dir/src/main.cpp.o -c /home/pal/workspace/simple-code-inserter/src/main.cpp",
   "file": "/home/pal/workspace/simple-code-inserter/src/main.cpp",
   "output": "CMakeFiles/insert-print-stmts.dir/src/main.cpp.o"
 },
 {
   "directory": "/home/pal/workspace/simple-code-inserter/build",
-  "command": "/usr/bin/clang++   -Wall -g3 -O0 -fno-rtti -I/usr/include -std=c++17   -fno-exceptions -funwind-tables -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/insert-print-stmts.dir/src/utils/utils.cpp.o -c /home/pal/workspace/simple-code-inserter/src/utils/utils.cpp",
+  "command": "/usr/bin/c++  -isystem /home/pal/opt/llvm/include -Wall -g3 -O0 -fno-rtti    -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/insert-print-stmts.dir/src/utils/utils.cpp.o -c /home/pal/workspace/simple-code-inserter/src/utils/utils.cpp",
   "file": "/home/pal/workspace/simple-code-inserter/src/utils/utils.cpp",
   "output": "CMakeFiles/insert-print-stmts.dir/src/utils/utils.cpp.o"
 },
 {
   "directory": "/home/pal/workspace/simple-code-inserter/build",
-  "command": "/usr/bin/clang++   -Wall -g3 -O0 -fno-rtti -I/usr/include -std=c++17   -fno-exceptions -funwind-tables -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/insert-print-stmts.dir/src/tool/code_inserter_tool.cpp.o -c /home/pal/workspace/simple-code-inserter/src/tool/code_inserter_tool.cpp",
+  "command": "/usr/bin/c++  -isystem /home/pal/opt/llvm/include -Wall -g3 -O0 -fno-rtti    -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -o CMakeFiles/insert-print-stmts.dir/src/tool/code_inserter_tool.cpp.o -c /home/pal/workspace/simple-code-inserter/src/tool/code_inserter_tool.cpp",
   "file": "/home/pal/workspace/simple-code-inserter/src/tool/code_inserter_tool.cpp",
   "output": "CMakeFiles/insert-print-stmts.dir/src/tool/code_inserter_tool.cpp.o"
 }
