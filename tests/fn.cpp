@@ -19,7 +19,6 @@ void foo(int &a, int &b) {
   b = b * b * 2;
 }
 
-// BUG:
 int bar(int x) {
   if (x % 2 == 0)
     return x * 2;

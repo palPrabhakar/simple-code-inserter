@@ -32,6 +32,8 @@ using ::clang::transformer::makeRule;
 using ::clang::transformer::name;
 using ::clang::transformer::node;
 using ::clang::transformer::statements;
+using ::clang::ast_matchers::hasDescendant;
+using ::clang::ast_matchers::ifStmt;
 
 class CodeInserterTool {
 public:
@@ -47,12 +49,13 @@ private:
     print_at_top,
     print_before_rtn,
     print_end_void,
+    print_before_rtn_single_Ifelse,
     include_stmt
   };
 
   ASTEdit getAction(enum action_t);
 
-  enum class matcher_t { fn_stmt, rtn_stmt, fn_stmt_void };
+  enum class matcher_t { fn_stmt, rtn_stmt, rtn_stmt_ifStmt, fn_stmt_void };
 
   DynTypedMatcher getMatcher(matcher_t);
 

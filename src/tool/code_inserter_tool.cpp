@@ -27,6 +27,10 @@ ASTEdit CodeInserterTool::getAction(action_t type) {
   case action_t::print_before_rtn:
     return insertBefore(node("rtn"), cat("std::cout<<\"end: ", name("fname"),
                                          "\"<<std::endl;"));
+  case action_t::print_before_rtn_single_Ifelse:
+    return clang::transformer::changeTo(
+        node("rtn"), cat("{", "std::cout<<\"end: ", name("fname"),
+                         "\"<<std::endl;", node("rtn"), "}"));
   case action_t::print_end_void:
     return insertAfter(statements("fn"), cat("std::cout<<\"end: ",
                                              name("fname"), "\"<<std::endl;"));
@@ -53,6 +57,12 @@ DynTypedMatcher CodeInserterTool::getMatcher(matcher_t type) {
                                       returns(asString("void")))
                              .bind("fname")))
         .bind("fn");
+  case matcher_t::rtn_stmt_ifStmt:
+    return returnStmt(
+               hasAncestor(ifStmt(unless(hasDescendant(compoundStmt())))),
+               hasAncestor(functionDecl(isExpansionInMainFile(), isDefinition())
+                               .bind("fname")))
+        .bind("rtn");
   default:
     throw std::runtime_error("Invalid matcher type\n");
   }
@@ -108,10 +118,19 @@ bool CodeInserterTool::run(CommonOptionsParser &options_parser) {
   if (m_end) {
     // register rule to insert print statement before return statements
     transformers.emplace_back(std::make_unique<Transformer>(
-        makeRule(getMatcher(matcher_t::rtn_stmt),
-                 getAction(action_t::print_before_rtn)),
+        clang::transformer::applyFirst(
+            {makeRule(getMatcher(matcher_t::rtn_stmt_ifStmt),
+                      getAction(action_t::print_before_rtn_single_Ifelse)),
+             makeRule(getMatcher(matcher_t::rtn_stmt),
+                      getAction(action_t::print_before_rtn))}),
         getConsumer()));
     transformers.back()->registerMatchers(&finder);
+
+    // transformers.emplace_back(std::make_unique<Transformer>(
+    //     makeRule(getMatcher(matcher_t::rtn_stmt_ifStmt),
+    //              getAction(action_t::print_before_rtn_single_Ifelse)),
+    //     getConsumer()));
+    // transformers.back()->registerMatchers(&finder);
 
     // register rule to insert print statement at the end of void function
     transformers.emplace_back(std::make_unique<Transformer>(
