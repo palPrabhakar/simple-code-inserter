@@ -10,9 +10,22 @@ class Toy {
 private:
   int x;
 };
-void foo(int a, int b) { int x = a + b; }
+void foo(int &a, int &b) {
+  if ((a + b % 2) == 0) {
+    return;
+  }
 
-int bar(int x) { return x * 2; }
+  a = a + b;
+  b = b * b * 2;
+}
+
+// BUG:
+int bar(int x) {
+  if (x % 2 == 0)
+    return x * 2;
+  else
+    return x * x;
+}
 
 int lol(int y) { return y + 4; }
 
@@ -22,9 +35,9 @@ int main() {
   a.get_x();
   a.foo(2);
   a.foo(2.0f);
-  
-  for(int i = 0; i < 2; ++i) {
-    i = i +2;
+
+  for (int i = 0; i < 2; ++i) {
+    i = i + 2;
   }
 
   return 0;

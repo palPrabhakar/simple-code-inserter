@@ -2,16 +2,14 @@
 #include "clang/Tooling/Refactoring/AtomicChange.h"
 #include "clang/Tooling/Transformer/RewriteRule.h"
 #include <clang/ASTMatchers/ASTMatchers.h>
-#include <clang/ASTMatchers/ASTMatchersInternal.h>
 #include <clang/Basic/CharInfo.h>
 #include <clang/Frontend/FrontendAction.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Tooling/Transformer/Stencil.h>
-#include <initializer_list>
+#include <cwctype>
 #include <llvm/ADT/StringRef.h>
 
 namespace sci {
-using ::clang::ast_matchers::asString;
 using ::clang::ast_matchers::compoundStmt;
 using ::clang::ast_matchers::functionDecl;
 using ::clang::ast_matchers::hasAncestor;
@@ -22,7 +20,6 @@ using ::clang::ast_matchers::isInStdNamespace;
 using ::clang::ast_matchers::returns;
 using ::clang::ast_matchers::returnStmt;
 using ::clang::ast_matchers::unless;
-using ::clang::ast_matchers::internal::DynTypedMatcher;
 using ::clang::tooling::AtomicChange;
 using ::clang::tooling::AtomicChanges;
 using ::clang::tooling::CommonOptionsParser;
@@ -32,6 +29,13 @@ using ::clang::transformer::makeRule;
 using ::clang::transformer::name;
 using ::clang::transformer::node;
 using ::clang::transformer::statements;
+
+class Actions {
+  static auto getIncludeAction() {
+  };
+
+
+};
 
 class CodeInserterTool {
 public:
@@ -43,18 +47,41 @@ private:
   AtomicChanges m_changes;
   bool m_end;
 
-  enum class action_t {
-    print_at_top,
-    print_before_rtn,
-    print_end_void,
-    include_stmt
-  };
+  clang::transformer::RewriteRule getRule() {
+    // std::vector<ASTEdit> actions;
+    // actions.emplace_back(
+    //     insertAfter(statements("fn"),
+    //                 cat("std::cout<<\"", name("fname"), "\"<<std::endl;")));
+    // actions.emplace_back(
+    //     addInclude("iostream", clang::transformer::IncludeFormat::Angled));
 
-  ASTEdit getAction(enum action_t);
+    auto matcher = compoundStmt(hasParent(functionDecl(isDefinition(),
+                                                       isExpansionInMainFile())
+                                              .bind("fname")))
+                       .bind("fn");
 
-  enum class matcher_t { fn_stmt, rtn_stmt, fn_stmt_void };
+    if (m_end) {
+      // actions.emplace_back(
+      //     insertAfter(statements("fn"),
+      //                 cat("std::cout<<\"", name("fname"),
+      //                 "\"<<std::endl;")));
 
-  DynTypedMatcher getMatcher(matcher_t);
+      auto match_non_void =
+          returnStmt(
+              hasAncestor(functionDecl(isExpansionInMainFile(), isDefinition())
+                              .bind("fname")))
+              .bind("rtn");
+      auto action_rtn =
+          insertBefore(node("rtn"), cat("std::cout<<\"end: ", name("fname"),
+                                        "\"<<std::endl;"));
+      return clang::transformer::applyFirst(
+          {makeRule(std::move(matcher), std::move(actions)),
+           makeRule(std::move(match_non_void), std::move(action_rtn))});
+
+    } else {
+      return makeRule(std::move(matcher), std::move(actions));
+    }
+  }
 
   auto getConsumer() {
     return [&](llvm::Expected<llvm::MutableArrayRef<AtomicChange>> C) {
