@@ -1,24 +1,25 @@
 # Simple Code Inserter
 
-Insert print statements in every function in a given source file. 
+Insert arbitrary code in every function in a given source file. 
 
 ## Usage 
 
 1. Single File
 
+### Insert code at top
+
 ```bash
-./insert-print-stmts main.cpp
+./simple-code-inserter --top=<code> <input-file.cpp>
+```
+
+### Insert code at top, end and header file
+
+```bash
+./simple-code-inserter --top=<code> --end=<code> --include=<header> <input-file.cpp>
 ```
 
 2. Multiple File 
 
 ```bash
-./insert-print-stmts main.cpp foo.cpp bar.cpp 
+./simple-code-inserter --top=<code> --end=<code> --include=<header> <input-file1.cpp> <input-file2.cpp> ... <input-filen.cpp>
 ```
-
-or 
-
-```bash
-find <abs-path-to-src> -name "*.cpp" | xargs ./insert-print-stmts
-```
-
