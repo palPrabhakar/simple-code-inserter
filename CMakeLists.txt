@@ -5,7 +5,9 @@ cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(insert-print-stmts)
+set (CMAKE_CXX_STANDARD 20)
+
+project(simple-code-inserter)
 
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin/)
 
@@ -19,9 +21,9 @@ set(CMAKE_CXX_FLAGS "-Wall -g3 -O0 -fno-rtti ${LLVM_COMPILE_FLAGS}")
 include_directories(SYSTEM ${LLVM_INCLUDE_DIRS} ${CLANG_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 
-add_executable(insert-print-stmts src/main.cpp src/tool/code_inserter_tool.cpp)
+add_executable(simple-code-inserter src/main.cpp src/tool/code_inserter_tool.cpp)
 
-target_link_libraries(insert-print-stmts
+target_link_libraries(simple-code-inserter
   PRIVATE
   clangAST
   clangASTMatchers

@@ -7,7 +7,6 @@
 #include <clang/Frontend/FrontendAction.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Tooling/Transformer/Stencil.h>
-#include <initializer_list>
 #include <llvm/ADT/StringRef.h>
 
 namespace sci {
@@ -15,7 +14,9 @@ using ::clang::ast_matchers::asString;
 using ::clang::ast_matchers::compoundStmt;
 using ::clang::ast_matchers::functionDecl;
 using ::clang::ast_matchers::hasAncestor;
+using ::clang::ast_matchers::hasDescendant;
 using ::clang::ast_matchers::hasParent;
+using ::clang::ast_matchers::ifStmt;
 using ::clang::ast_matchers::isDefinition;
 using ::clang::ast_matchers::isExpansionInMainFile;
 using ::clang::ast_matchers::isInStdNamespace;
@@ -32,18 +33,28 @@ using ::clang::transformer::makeRule;
 using ::clang::transformer::name;
 using ::clang::transformer::node;
 using ::clang::transformer::statements;
-using ::clang::ast_matchers::hasDescendant;
-using ::clang::ast_matchers::ifStmt;
+using ::clang::transformer::Stencil;
+using ::clang::transformer::catVector;
+using ::clang::transformer::changeTo;
+
+std::vector<Stencil> parseCode(std::string);
 
 class CodeInserterTool {
 public:
-  CodeInserterTool(bool end = false) : m_end(end) {}
+  CodeInserterTool(std::string top_code, std::string end_code, std::string include): m_include(include) {
+    if (!top_code.empty())
+      m_top_code = parseCode(std::move(top_code));
+    if (!end_code.empty())
+      m_end_code = parseCode(std::move(end_code));
+  }
   bool run(CommonOptionsParser &);
   bool applySourceChanges();
 
 private:
   AtomicChanges m_changes;
-  bool m_end;
+  std::string m_include;
+  std::vector<Stencil> m_top_code;
+  std::vector<Stencil> m_end_code;
 
   enum class action_t {
     print_at_top,

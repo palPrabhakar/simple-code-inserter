@@ -1,12 +1,14 @@
 #include "code_inserter_tool.h"
-#include <algorithm>
 #include <clang/ASTMatchers/ASTMatchFinder.h>
 #include <clang/ASTMatchers/ASTMatchers.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Tooling/Refactoring/AtomicChange.h>
 #include <clang/Tooling/Tooling.h>
 #include <clang/Tooling/Transformer/RewriteRule.h>
+#include <clang/Tooling/Transformer/Stencil.h>
 #include <clang/Tooling/Transformer/Transformer.h>
+#include <format>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 
@@ -17,23 +19,43 @@ using ::clang::tooling::newFrontendActionFactory;
 using ::clang::tooling::Transformer;
 using ::clang::transformer::RewriteRule;
 
+std::vector<Stencil> parseCode(std::string code_str) {
+  std::vector<Stencil> code;
+  size_t start = 0;
+  size_t end = code_str.find('{');
+  while (end != std::string::npos) {
+    code.push_back(cat(code_str.substr(start, end - start)));
+    start = end + 1;
+    end = code_str.find('}', start);
+    if (end != std::string::npos) {
+      auto val = code_str.substr(start, end - start);
+      if (val != "name") {
+        throw std::runtime_error(std::format("Invalid option: {}\n", val));
+      }
+      code.push_back(cat(name("fname")));
+      start = end + 1;
+    } else {
+      throw std::runtime_error("Expected } after {\n");
+    }
+    end = code_str.find('{', start);
+  }
+  code.push_back(cat(code_str.substr(start)));
+  return code;
+}
+
 ASTEdit CodeInserterTool::getAction(action_t type) {
   switch (type) {
   case action_t::print_at_top:
-    return insertBefore(statements("fn"),
-                        cat("std::cout<<\"", name("fname"), "\"<<std::endl;"));
+    return insertBefore(statements("fn"), catVector(m_top_code));
   case action_t::include_stmt:
-    return addInclude("iostream", clang::transformer::IncludeFormat::Angled);
+    return addInclude(m_include, clang::transformer::IncludeFormat::Angled);
   case action_t::print_before_rtn:
-    return insertBefore(node("rtn"), cat("std::cout<<\"end: ", name("fname"),
-                                         "\"<<std::endl;"));
+    return insertBefore(node("rtn"), catVector(m_end_code));
   case action_t::print_before_rtn_single_Ifelse:
-    return clang::transformer::changeTo(
-        node("rtn"), cat("{", "std::cout<<\"end: ", name("fname"),
-                         "\"<<std::endl;", node("rtn"), "}"));
+    return changeTo(node("rtn"),
+                    cat("{", catVector(m_end_code), node("rtn"), "}"));
   case action_t::print_end_void:
-    return insertAfter(statements("fn"), cat("std::cout<<\"end: ",
-                                             name("fname"), "\"<<std::endl;"));
+    return insertAfter(statements("fn"), catVector(m_end_code));
   default:
     throw std::runtime_error("Invalid action type\n");
   }
@@ -107,15 +129,25 @@ bool CodeInserterTool::run(CommonOptionsParser &options_parser) {
   std::vector<std::unique_ptr<Transformer>> transformers;
   MatchFinder finder;
 
-  // register rule to insert print statements at the top of the function
-  transformers.emplace_back(std::make_unique<Transformer>(
-      makeRule(getMatcher(matcher_t::fn_stmt),
-               {getAction(action_t::print_at_top),
-                getAction(action_t::include_stmt)}),
-      getConsumer()));
-  transformers.back()->registerMatchers(&finder);
+  if (!m_top_code.empty()) {
+    // register rule to insert print statements at the top of the function
+    transformers.emplace_back(std::make_unique<Transformer>(
+        makeRule(getMatcher(matcher_t::fn_stmt),
+                 getAction(action_t::print_at_top)),
+        getConsumer()));
+    transformers.back()->registerMatchers(&finder);
+  }
 
-  if (m_end) {
+  if (!m_include.empty()) {
+    // add include statement
+    transformers.emplace_back(std::make_unique<Transformer>(
+        makeRule(getMatcher(matcher_t::fn_stmt),
+                 getAction(action_t::include_stmt)),
+        getConsumer()));
+    transformers.back()->registerMatchers(&finder);
+  }
+
+  if (!m_end_code.empty()) {
     // register rule to insert print statement before return statements
     transformers.emplace_back(std::make_unique<Transformer>(
         clang::transformer::applyFirst(
@@ -125,12 +157,6 @@ bool CodeInserterTool::run(CommonOptionsParser &options_parser) {
                       getAction(action_t::print_before_rtn))}),
         getConsumer()));
     transformers.back()->registerMatchers(&finder);
-
-    // transformers.emplace_back(std::make_unique<Transformer>(
-    //     makeRule(getMatcher(matcher_t::rtn_stmt_ifStmt),
-    //              getAction(action_t::print_before_rtn_single_Ifelse)),
-    //     getConsumer()));
-    // transformers.back()->registerMatchers(&finder);
 
     // register rule to insert print statement at the end of void function
     transformers.emplace_back(std::make_unique<Transformer>(
