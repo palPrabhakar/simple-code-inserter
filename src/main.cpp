@@ -7,10 +7,14 @@ static llvm::cl::OptionCategory ct_category("simple-code-inserter options");
 
 static llvm::cl::opt<std::string> top_code("top", llvm::cl::desc("<top code>"),
                                            llvm::cl::ZeroOrMore);
-llvm::cl::opt<std::string> end_code("end", llvm::cl::desc("<end code>"),
-                                    llvm::cl::ZeroOrMore);
-llvm::cl::opt<std::string> include("include", llvm::cl::desc("<include header>"),
-                                    llvm::cl::ZeroOrMore);
+static llvm::cl::opt<std::string> end_code("end", llvm::cl::desc("<end code>"),
+                                           llvm::cl::ZeroOrMore);
+static llvm::cl::opt<std::string> include("include",
+                                          llvm::cl::desc("<include header>"),
+                                          llvm::cl::ZeroOrMore);
+static llvm::cl::opt<bool>
+    quoted("quoted", llvm::cl::desc("<change include style to quoted>"),
+           llvm::cl::ZeroOrMore);
 
 using ::clang::tooling::CommonOptionsParser;
 
@@ -22,7 +26,7 @@ int main(int argc, const char **argv) {
   }
 
   CommonOptionsParser &options_parser = expected_parser.get();
-  sci::CodeInserterTool tool(top_code, end_code, include);
+  sci::CodeInserterTool tool(top_code, end_code, include, quoted);
 
   if (!tool.run(options_parser))
     tool.applySourceChanges();

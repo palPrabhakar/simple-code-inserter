@@ -29,19 +29,23 @@ using ::clang::tooling::AtomicChanges;
 using ::clang::tooling::CommonOptionsParser;
 using ::clang::transformer::ASTEdit;
 using ::clang::transformer::cat;
+using ::clang::transformer::catVector;
+using ::clang::transformer::changeTo;
 using ::clang::transformer::makeRule;
 using ::clang::transformer::name;
 using ::clang::transformer::node;
 using ::clang::transformer::statements;
 using ::clang::transformer::Stencil;
-using ::clang::transformer::catVector;
-using ::clang::transformer::changeTo;
+using ::clang::transformer::IncludeFormat::Angled;
+using ::clang::transformer::IncludeFormat::Quoted;
 
 std::vector<Stencil> parseCode(std::string);
 
 class CodeInserterTool {
 public:
-  CodeInserterTool(std::string top_code, std::string end_code, std::string include): m_include(include) {
+  CodeInserterTool(std::string top_code, std::string end_code,
+                   std::string include, bool quoted)
+      : m_include(include), m_quoted(quoted) {
     if (!top_code.empty())
       m_top_code = parseCode(std::move(top_code));
     if (!end_code.empty())
@@ -53,6 +57,7 @@ public:
 private:
   AtomicChanges m_changes;
   std::string m_include;
+  bool m_quoted;
   std::vector<Stencil> m_top_code;
   std::vector<Stencil> m_end_code;
 

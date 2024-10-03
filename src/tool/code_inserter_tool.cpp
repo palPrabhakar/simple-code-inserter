@@ -48,7 +48,7 @@ ASTEdit CodeInserterTool::getAction(action_t type) {
   case action_t::print_at_top:
     return insertBefore(statements("fn"), catVector(m_top_code));
   case action_t::include_stmt:
-    return addInclude(m_include, clang::transformer::IncludeFormat::Angled);
+    return addInclude(m_include, m_quoted ? Quoted : Angled);
   case action_t::print_before_rtn:
     return insertBefore(node("rtn"), catVector(m_end_code));
   case action_t::print_before_rtn_single_Ifelse:
