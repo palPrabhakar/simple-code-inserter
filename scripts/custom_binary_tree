@@ -1,0 +1,248 @@
+digraph {
+	Parse [label=Parse color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	Parse -> GetNextToken
+	Parse [label=Parse color=lightblue style=filled]
+	ParseFunction [label=ParseFunction color=lightgreen style=filled]
+	Parse -> ParseFunction
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseFunction -> CheckTokenizer
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseFunction -> GetNextToken
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	ParseArgumentList [label=ParseArgumentList color=lightgreen style=filled]
+	ParseFunction -> ParseArgumentList
+	ParseArgumentList [label=ParseArgumentList color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseArgumentList -> CheckTokenizer
+	ParseArgumentList [label=ParseArgumentList color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseArgumentList -> GetNextToken
+	ParseArgumentList [label=ParseArgumentList color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseArgumentList -> CheckTokenizer
+	ParseArgumentList [label=ParseArgumentList color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseArgumentList -> GetNextToken
+	ParseArgumentList [label=ParseArgumentList color=lightblue style=filled]
+	CheckSymbol [label=CheckSymbol color=lightgreen style=filled]
+	ParseArgumentList -> CheckSymbol
+	ParseArgumentList [label=ParseArgumentList color=lightblue style=filled]
+	InsertSymbol [label=InsertSymbol color=lightgreen style=filled]
+	ParseArgumentList -> InsertSymbol
+	ParseArgumentList [label=ParseArgumentList color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseArgumentList -> CheckTokenizer
+	ParseArgumentList [label=ParseArgumentList color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseArgumentList -> GetNextToken
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	ParseFunctionBody [label=ParseFunctionBody color=lightgreen style=filled]
+	ParseFunction -> ParseFunctionBody
+	ParseFunctionBody [label=ParseFunctionBody color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseFunctionBody -> CheckTokenizer
+	ParseFunctionBody [label=ParseFunctionBody color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseFunctionBody -> GetNextToken
+	ParseFunctionBody [label=ParseFunctionBody color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseFunctionBody -> CheckTokenizer
+	ParseFunctionBody [label=ParseFunctionBody color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseFunctionBody -> GetNextToken
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	ParseReturnStatement [label=ParseReturnStatement color=lightgreen style=filled]
+	ParseFunction -> ParseReturnStatement
+	ParseReturnStatement [label=ParseReturnStatement color=lightblue style=filled]
+	ParseExpression [label=ParseExpression color=lightgreen style=filled]
+	ParseReturnStatement -> ParseExpression
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseExpression -> CheckTokenizer
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseExpression -> GetNextToken
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	CheckSymbol [label=CheckSymbol color=lightgreen style=filled]
+	ParseExpression -> CheckSymbol
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseExpression -> CheckTokenizer
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseExpression -> GetNextToken
+	ParseReturnStatement [label=ParseReturnStatement color=lightblue style=filled]
+	ParseExpression [label=ParseExpression color=lightgreen style=filled]
+	ParseReturnStatement -> ParseExpression
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseExpression -> CheckTokenizer
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseExpression -> GetNextToken
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseExpression -> CheckTokenizer
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseExpression -> GetNextToken
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseFunction -> CheckTokenizer
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseFunction -> GetNextToken
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	GenerateCode [label=GenerateCode color=lightgreen style=filled]
+	ParseFunction -> GenerateCode
+	GenerateCode [label=GenerateCode color=lightblue style=filled]
+	GenerateCode [label=GenerateCode color=lightgreen style=filled]
+	GenerateCode -> GenerateCode
+	GenerateCode [label=GenerateCode color=lightblue style=filled]
+	GenerateCode [label=GenerateCode color=lightgreen style=filled]
+	GenerateCode -> GenerateCode
+	GenerateCode [label=GenerateCode color=lightblue style=filled]
+	GenerateCode [label=GenerateCode color=lightgreen style=filled]
+	GenerateCode -> GenerateCode
+	GenerateCode [label=GenerateCode color=lightblue style=filled]
+	GenerateCode [label=GenerateCode color=lightgreen style=filled]
+	GenerateCode -> GenerateCode
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	do_register_alloc [label=do_register_alloc color=lightgreen style=filled]
+	ParseFunction -> do_register_alloc
+	ParseFunction [label=ParseFunction color=lightblue style=filled]
+	InsertPrototype [label=InsertPrototype color=lightgreen style=filled]
+	ParseFunction -> InsertPrototype
+	Parse [label=Parse color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	Parse -> GetNextToken
+	Parse [label=Parse color=lightblue style=filled]
+	ParseDeclaration [label=ParseDeclaration color=lightgreen style=filled]
+	Parse -> ParseDeclaration
+	ParseDeclaration [label=ParseDeclaration color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseDeclaration -> CheckTokenizer
+	ParseDeclaration [label=ParseDeclaration color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseDeclaration -> GetNextToken
+	ParseDeclaration [label=ParseDeclaration color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseDeclaration -> CheckTokenizer
+	ParseDeclaration [label=ParseDeclaration color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseDeclaration -> GetNextToken
+	ParseDeclaration [label=ParseDeclaration color=lightblue style=filled]
+	ParseExpression [label=ParseExpression color=lightgreen style=filled]
+	ParseDeclaration -> ParseExpression
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseExpression -> CheckTokenizer
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseExpression -> GetNextToken
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	ParseFunctionCall [label=ParseFunctionCall color=lightgreen style=filled]
+	ParseExpression -> ParseFunctionCall
+	ParseFunctionCall [label=ParseFunctionCall color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseFunctionCall -> CheckTokenizer
+	ParseFunctionCall [label=ParseFunctionCall color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseFunctionCall -> GetNextToken
+	ParseFunctionCall [label=ParseFunctionCall color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseFunctionCall -> CheckTokenizer
+	ParseFunctionCall [label=ParseFunctionCall color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseFunctionCall -> GetNextToken
+	ParseFunctionCall [label=ParseFunctionCall color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseFunctionCall -> CheckTokenizer
+	ParseFunctionCall [label=ParseFunctionCall color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseFunctionCall -> GetNextToken
+	ParseFunctionCall [label=ParseFunctionCall color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseFunctionCall -> CheckTokenizer
+	ParseFunctionCall [label=ParseFunctionCall color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseFunctionCall -> GetNextToken
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	CheckTokenizer [label=CheckTokenizer color=lightgreen style=filled]
+	ParseExpression -> CheckTokenizer
+	ParseExpression [label=ParseExpression color=lightblue style=filled]
+	GetNextToken [label=GetNextToken color=lightgreen style=filled]
+	ParseExpression -> GetNextToken
+	ParseDeclaration [label=ParseDeclaration color=lightblue style=filled]
+	CheckSymbol [label=CheckSymbol color=lightgreen style=filled]
+	ParseDeclaration -> CheckSymbol
+	ParseDeclaration [label=ParseDeclaration color=lightblue style=filled]
+	InsertSymbol [label=InsertSymbol color=lightgreen style=filled]
+	ParseDeclaration -> InsertSymbol
+	GenerateCode [label=GenerateCode color=lightblue style=filled]
+	GenerateCode [label=GenerateCode color=lightgreen style=filled]
+	GenerateCode -> GenerateCode
+	GenerateCode [label=GenerateCode color=lightblue style=filled]
+	GenerateCode [label=GenerateCode color=lightgreen style=filled]
+	GenerateCode -> GenerateCode
+	Interpret [label=Interpret color=lightblue style=filled]
+	Loadi [label=Loadi color=lightgreen style=filled]
+	Interpret -> Loadi
+	Interpret [label=Interpret color=lightblue style=filled]
+	Store [label=Store color=lightgreen style=filled]
+	Interpret -> Store
+	Store [label=Store color=lightblue style=filled]
+	SetValue [label=SetValue color=lightgreen style=filled]
+	Store -> SetValue
+	Interpret [label=Interpret color=lightblue style=filled]
+	Rmov [label=Rmov color=lightgreen style=filled]
+	Interpret -> Rmov
+	Interpret [label=Interpret color=lightblue style=filled]
+	Call [label=Call color=lightgreen style=filled]
+	Interpret -> Call
+	Call [label=Call color=lightblue style=filled]
+	InsertSymbol [label=InsertSymbol color=lightgreen style=filled]
+	Call -> InsertSymbol
+	Call [label=Call color=lightblue style=filled]
+	Interpret [label=Interpret color=lightgreen style=filled]
+	Call -> Interpret
+	Interpret [label=Interpret color=lightblue style=filled]
+	Store [label=Store color=lightgreen style=filled]
+	Interpret -> Store
+	Store [label=Store color=lightblue style=filled]
+	SetValue [label=SetValue color=lightgreen style=filled]
+	Store -> SetValue
+	Interpret [label=Interpret color=lightblue style=filled]
+	Load [label=Load color=lightgreen style=filled]
+	Interpret -> Load
+	Load [label=Load color=lightblue style=filled]
+	GetValue [label=GetValue color=lightgreen style=filled]
+	Load -> GetValue
+	Interpret [label=Interpret color=lightblue style=filled]
+	Loadi [label=Loadi color=lightgreen style=filled]
+	Interpret -> Loadi
+	Interpret [label=Interpret color=lightblue style=filled]
+	Mul [label=Mul color=lightgreen style=filled]
+	Interpret -> Mul
+	Interpret [label=Interpret color=lightblue style=filled]
+	Rmov [label=Rmov color=lightgreen style=filled]
+	Interpret -> Rmov
+	Interpret [label=Interpret color=lightblue style=filled]
+	Ret [label=Ret color=lightgreen style=filled]
+	Interpret -> Ret
+	Interpret [label=Interpret color=lightblue style=filled]
+	Load [label=Load color=lightgreen style=filled]
+	Interpret -> Load
+	Load [label=Load color=lightblue style=filled]
+	GetValue [label=GetValue color=lightgreen style=filled]
+	Load -> GetValue
+	Interpret [label=Interpret color=lightblue style=filled]
+	Store [label=Store color=lightgreen style=filled]
+	Interpret -> Store
+	Store [label=Store color=lightblue style=filled]
+	SetValue [label=SetValue color=lightgreen style=filled]
+	Store -> SetValue
+}

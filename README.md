@@ -23,3 +23,6 @@ Insert arbitrary code in every function in a given source file.
 ```bash
 ./simple-code-inserter --top=<code> --end=<code> --include=<header> <input-file1.cpp> <input-file2.cpp> ... <input-filen.cpp>
 ```
+
+## Limitations
+1. Doesn't work on constructors  
