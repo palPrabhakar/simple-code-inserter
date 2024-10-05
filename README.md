@@ -25,4 +25,5 @@ Insert arbitrary code in every function in a given source file.
 ```
 
 ## Limitations
-1. Doesn't work on constructors  
+1. Does not support functions expanded from macros. 
+2. Does not work with constructors when using '{name}' in code. 

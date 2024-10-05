@@ -23,6 +23,7 @@ using ::clang::ast_matchers::isInStdNamespace;
 using ::clang::ast_matchers::returns;
 using ::clang::ast_matchers::returnStmt;
 using ::clang::ast_matchers::unless;
+using ::clang::ast_matchers::isImplicit;
 using ::clang::ast_matchers::internal::DynTypedMatcher;
 using ::clang::tooling::AtomicChange;
 using ::clang::tooling::AtomicChanges;

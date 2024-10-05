@@ -8,11 +8,21 @@
 #include <clang/Tooling/Transformer/Stencil.h>
 #include <clang/Tooling/Transformer/Transformer.h>
 #include <format>
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 
+namespace clang {
+namespace ast_matchers {
+AST_POLYMORPHIC_MATCHER(isMacroExpansion,
+                        AST_POLYMORPHIC_SUPPORTED_TYPES(Decl, Stmt, TypeLoc)) {
+  auto &SourceManager = Finder->getASTContext().getSourceManager();
+  return SourceManager.isMacroBodyExpansion(Node.getBeginLoc());
+}
+} // namespace ast_matchers
+} // namespace clang
+
 namespace sci {
+using ::clang::ast_matchers::isMacroExpansion;
 using ::clang::ast_matchers::MatchFinder;
 using ::clang::tooling::ApplyChangesSpec;
 using ::clang::tooling::newFrontendActionFactory;
@@ -65,24 +75,32 @@ DynTypedMatcher CodeInserterTool::getMatcher(matcher_t type) {
   switch (type) {
   case matcher_t::fn_stmt:
     return compoundStmt(
-               hasParent(functionDecl(isDefinition(), isExpansionInMainFile())
+               hasParent(functionDecl(isDefinition(), isExpansionInMainFile(),
+                                      unless(isImplicit()),
+                                      unless(isMacroExpansion()))
                              .bind("fname")))
         .bind("fn");
   case matcher_t::rtn_stmt:
     return returnStmt(
-               hasAncestor(functionDecl(isExpansionInMainFile(), isDefinition())
+               hasAncestor(functionDecl(isExpansionInMainFile(), isDefinition(),
+                                        unless(isImplicit()),
+                                        unless(isMacroExpansion()))
                                .bind("fname")))
         .bind("rtn");
   case matcher_t::fn_stmt_void:
     return compoundStmt(
                hasParent(functionDecl(isDefinition(), isExpansionInMainFile(),
-                                      returns(asString("void")))
+                                      returns(asString("void")),
+                                      unless(isImplicit()),
+                                      unless(isMacroExpansion()))
                              .bind("fname")))
         .bind("fn");
   case matcher_t::rtn_stmt_ifStmt:
     return returnStmt(
                hasAncestor(ifStmt(unless(hasDescendant(compoundStmt())))),
-               hasAncestor(functionDecl(isExpansionInMainFile(), isDefinition())
+               hasAncestor(functionDecl(isExpansionInMainFile(), isDefinition(),
+                                        unless(isImplicit()),
+                                        unless(isMacroExpansion()))
                                .bind("fname")))
         .bind("rtn");
   default:

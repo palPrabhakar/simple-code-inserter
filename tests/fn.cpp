@@ -1,6 +1,10 @@
 #include "./fn.h"
 
+namespace {
 class Toy {
+public:
+  Toy() {}
+  virtual void foo() {};
   void do_something(int y) {
     x = y;
     x = x * 2;
@@ -10,6 +14,16 @@ class Toy {
 private:
   int x;
 };
+
+class SpToy : public Toy {
+  SpToy(int t) : m_t(t) {}
+
+private:
+  int m_t;
+};
+
+} // namespace
+
 void foo(int &a, int &b) {
   if ((a + b % 2) == 0) {
     return;
