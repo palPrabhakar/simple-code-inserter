@@ -11,6 +11,8 @@ public:
   }
   int get_x() { return x; }
 
+  template <typename T> T bar(T a, T b) { return a + b; }
+
 private:
   int x;
 };
@@ -40,7 +42,9 @@ int bar(int x) {
     return x * x;
 }
 
-int lol(int y) { return y + 4; }
+int lol(int y) {
+  return y + 4;
+}
 
 int main() {
   auto b = bar(2);
@@ -48,6 +52,10 @@ int main() {
   a.get_x();
   a.foo(2);
   a.foo(2.0f);
+
+  auto toy = Toy();
+  auto r0 = toy.bar(1.0, 2.0);
+  auto r1 = toy.bar(1, 2);
 
   for (int i = 0; i < 2; ++i) {
     i = i + 2;
