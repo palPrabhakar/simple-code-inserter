@@ -72,36 +72,29 @@ ASTEdit CodeInserterTool::getAction(action_t type) {
 }
 
 DynTypedMatcher CodeInserterTool::getMatcher(matcher_t type) {
+  auto fn_decl = functionDecl(isDefinition(), isExpansionInMainFile(),
+                              unless(isImplicit()), unless(isMacroExpansion()),
+                              unless(isTemplateInstantiation()))
+                     .bind("fname");
+
   switch (type) {
   case matcher_t::fn_stmt:
-    return compoundStmt(
-               hasParent(functionDecl(isDefinition(), isExpansionInMainFile(),
-                                      unless(isImplicit()),
-                                      unless(isMacroExpansion()))
-                             .bind("fname")))
-        .bind("fn");
+    return compoundStmt(hasParent(fn_decl)).bind("fn");
   case matcher_t::rtn_stmt:
-    return returnStmt(
-               hasAncestor(functionDecl(isExpansionInMainFile(), isDefinition(),
-                                        unless(isImplicit()),
-                                        unless(isMacroExpansion()))
-                               .bind("fname")))
-        .bind("rtn");
+    return returnStmt(hasAncestor(fn_decl)).bind("rtn");
   case matcher_t::fn_stmt_void:
     return compoundStmt(
                hasParent(functionDecl(isDefinition(), isExpansionInMainFile(),
                                       returns(asString("void")),
                                       unless(isImplicit()),
-                                      unless(isMacroExpansion()))
+                                      unless(isMacroExpansion()),
+                                      unless(isTemplateInstantiation()))
                              .bind("fname")))
         .bind("fn");
   case matcher_t::rtn_stmt_ifStmt:
     return returnStmt(
                hasAncestor(ifStmt(unless(hasDescendant(compoundStmt())))),
-               hasAncestor(functionDecl(isExpansionInMainFile(), isDefinition(),
-                                        unless(isImplicit()),
-                                        unless(isMacroExpansion()))
-                               .bind("fname")))
+               hasAncestor(fn_decl))
         .bind("rtn");
   default:
     throw std::runtime_error("Invalid matcher type\n");

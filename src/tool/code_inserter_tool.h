@@ -5,6 +5,7 @@
 #include <clang/ASTMatchers/ASTMatchersInternal.h>
 #include <clang/Basic/CharInfo.h>
 #include <clang/Frontend/FrontendAction.h>
+#include <clang/Sema/Ownership.h>
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <clang/Tooling/Transformer/Stencil.h>
 #include <llvm/ADT/StringRef.h>
@@ -20,6 +21,7 @@ using ::clang::ast_matchers::ifStmt;
 using ::clang::ast_matchers::isDefinition;
 using ::clang::ast_matchers::isExpansionInMainFile;
 using ::clang::ast_matchers::isInStdNamespace;
+using ::clang::ast_matchers::isTemplateInstantiation;
 using ::clang::ast_matchers::returns;
 using ::clang::ast_matchers::returnStmt;
 using ::clang::ast_matchers::unless;
