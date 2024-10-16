@@ -27,13 +27,12 @@ private:
 } // namespace
 
 constexpr int double_n(int x) { return x * 2; }
-constexpr int square(int value) { return value * value; }
+consteval int square(int value) { return value * value; }
 
 void foo(int &a, int &b) {
   if ((a + b % 2) == 0) {
     return;
   }
-
   a = a + b;
   b = b * b * 2;
 }

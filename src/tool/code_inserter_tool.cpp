@@ -74,7 +74,8 @@ ASTEdit CodeInserterTool::getAction(action_t type) {
 DynTypedMatcher CodeInserterTool::getMatcher(matcher_t type) {
   auto fn_decl = functionDecl(isDefinition(), isExpansionInMainFile(),
                               unless(isImplicit()), unless(isMacroExpansion()),
-                              unless(isTemplateInstantiation()))
+                              unless(isTemplateInstantiation()),
+                              unless(isConstexpr()), unless(isConsteval()))
                      .bind("fname");
 
   switch (type) {
@@ -84,12 +85,13 @@ DynTypedMatcher CodeInserterTool::getMatcher(matcher_t type) {
     return returnStmt(hasAncestor(fn_decl)).bind("rtn");
   case matcher_t::fn_stmt_void:
     return compoundStmt(
-               hasParent(functionDecl(isDefinition(), isExpansionInMainFile(),
-                                      returns(asString("void")),
-                                      unless(isImplicit()),
-                                      unless(isMacroExpansion()),
-                                      unless(isTemplateInstantiation()))
-                             .bind("fname")))
+               hasParent(
+                   functionDecl(isDefinition(), isExpansionInMainFile(),
+                                returns(asString("void")), unless(isImplicit()),
+                                unless(isMacroExpansion()),
+                                unless(isTemplateInstantiation()),
+                                unless(isConstexpr()), unless(isConsteval()))
+                       .bind("fname")))
         .bind("fn");
   case matcher_t::rtn_stmt_ifStmt:
     return returnStmt(

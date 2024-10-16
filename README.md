@@ -27,3 +27,5 @@ Insert arbitrary code in every function in a given source file.
 ## Limitations
 1. Does not support functions expanded from macros. 
 2. Does not work with constructors when using '{name}' in code. 
+
+Since the tool is mainly made to insert print statements therefore there is no support for constexpr and consteval functions.
