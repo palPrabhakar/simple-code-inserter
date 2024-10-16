@@ -26,6 +26,9 @@ private:
 
 } // namespace
 
+constexpr int double_n(int x) { return x * 2; }
+constexpr int square(int value) { return value * value; }
+
 void foo(int &a, int &b) {
   if ((a + b % 2) == 0) {
     return;
@@ -42,9 +45,7 @@ int bar(int x) {
     return x * x;
 }
 
-int lol(int y) {
-  return y + 4;
-}
+int lol(int y) { return y + 4; }
 
 int main() {
   auto b = bar(2);
@@ -60,6 +61,9 @@ int main() {
   for (int i = 0; i < 2; ++i) {
     i = i + 2;
   }
+
+  static_assert(double_n(2) == 4);
+  static_assert(square(2) == 4);
 
   return 0;
 }
